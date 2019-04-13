@@ -25,9 +25,9 @@ public class ConfigFile {
 		public String speAmpModelName="SPE 1.3K";
 		public String speAmpPortName="COM3";  //control port
 		public String speAmpBaudrate="4800";
-		public String speAmpCATPortName1="COM2";  //CAT port radio 1
+		public String speAmpCATPort1="COM2";  //CAT port radio 1
 		public String speAmpCATBaudrate1="38400";
-		public String speAmpCATPortName2="COM99";  //CAT port radio 2
+		public String speAmpCATPort2="COM99";  //CAT port radio 2
 		public String speAmpCATBaudrate2="38400";
 		// udp broadcast port information (defaults)
 		public String broadcastList="LOCALHOST:127.0.0.1:12060, 13063, 13065; NR4O-pi1:192.168.1.250:12060;";
@@ -56,11 +56,11 @@ public class ConfigFile {
 		
 		// check if file exists and read it else create a default configuration file
 		if(origFile.exists()) {
-		
+			System.out.println("Initializing: Reading configuration file");
 			readConfigFile(configFile);
 		}	
 		else {
-			System.out.println("Configuration file does not exist");
+			System.out.println("Initializing: Configuration file does not exist");
 			createConfigFile(configFile);
 		}
 	}
@@ -87,9 +87,9 @@ public class ConfigFile {
 			speAmpModelName = properties.getProperty("speAmpModelName");
 			speAmpPortName = properties.getProperty("speAmpPortName");
 			speAmpBaudrate = properties.getProperty("speAmpBaudrate");
-			speAmpCATPortName1 = properties.getProperty("speAmpCATPortName1");
+			speAmpCATPort1 = properties.getProperty("speAmpCATPort1");
 			speAmpCATBaudrate1 = properties.getProperty("speAmpCATBaudrate1");
-			speAmpCATPortName2 = properties.getProperty("speAmpCATPortName2");
+			speAmpCATPort2 = properties.getProperty("speAmpCATPort2");
 			speAmpCATBaudrate2 = properties.getProperty("speAmpCATBaudrate2");
 			
 			broadcastList = properties.getProperty("broadcastList");
@@ -105,16 +105,16 @@ public class ConfigFile {
 			
 			
 		} catch (Exception e) {
-			System.out.println("Configuration file does not exist or read error");
+			System.out.println("readConfigFile: Configuration file does not exist or read error");
 			e.printStackTrace();
 		}
 	}
 	
 	public void writeConfigFile(String file) {
 		File fileInput = new File(file);
-		FileWriter fileWriter;
-		try {
-			fileWriter = new FileWriter(fileInput);
+		
+		try (FileWriter fileWriter = new FileWriter(fileInput)) {
+			
 			BufferedWriter bufferWrite = new BufferedWriter(fileWriter);
 			bufferWrite.append("# java properties file for my AntennaTracker program project\r\n\r\n");
 			bufferWrite.append("# Radio & accessory model information\r\n");
@@ -135,9 +135,9 @@ public class ConfigFile {
 			bufferWrite.append("speAmpModelName=" + speAmpModelName + "\r\n");
 			bufferWrite.append("speAmpPortName=" + speAmpPortName + "\r\n");
 			bufferWrite.append("speAmpBaudrate=" + speAmpBaudrate + "\r\n");
-			bufferWrite.append("speAmpCATPort1=" + speAmpCATPortName1 + "\r\n");
-			bufferWrite.append("speAmpCATBaud=" + speAmpCATBaudrate1 + "\r\n");
-			bufferWrite.append("speAmpCATPortName2=" + speAmpCATPortName2 + "\r\n");
+			bufferWrite.append("speAmpCATPort1=" + speAmpCATPort1 + "\r\n");
+			bufferWrite.append("speAmpCATBaudrate1=" + speAmpCATBaudrate1 + "\r\n");
+			bufferWrite.append("speAmpCATPort2=" + speAmpCATPort2 + "\r\n");
 			bufferWrite.append("speAmpCATBaudrate2=" + speAmpCATBaudrate2 + "\r\n");
 			bufferWrite.newLine();
 			bufferWrite.append("# broadcastList format \"Hostname:ip-address:port list(comma separated);\"\r\n" + 
@@ -156,11 +156,7 @@ public class ConfigFile {
 			bufferWrite.append("antLabelListR1=" + antLabelListR1 + "\r\n\r\n");
 			bufferWrite.append("antLabelListR2=" + antLabelListR2 + "\r\n");
 			bufferWrite.newLine();
-			bufferWrite.append("# last saved antenna selection for each radio - default value is 0 \r\n");
-			
-			System.out.print("lastAntSelectR1=" + lastAntSelectR1 + "\r\n");
-			System.out.print("lastAntSelectR2=" + lastAntSelectR2 + "\r\n");
-			
+			bufferWrite.append("# last saved antenna selection for each radio - default value is 0 \r\n");		
 			bufferWrite.append("lastAntSelectR1=" + lastAntSelectR1 + "\r\n");
 			bufferWrite.append("lastAntSelectR2=" + lastAntSelectR2 + "\r\n");
 			bufferWrite.newLine();
@@ -170,6 +166,7 @@ public class ConfigFile {
 			bufferWrite.close();
 			
 		} catch (IOException e) {
+			System.out.println("writeConfigFile: Configuration file does not exist or write error");
 			e.printStackTrace();
 		}
 	}
@@ -211,23 +208,24 @@ public class ConfigFile {
 					// write a new version of the configuration file
 					writeConfigFile(file);
 				
-					System.out.println("Configuration file backup complete");
+					System.out.println("backupConfigFile: Configuration file backup complete");
 	
 					returnVal = true;
 					return returnVal;
 				
 				} else {
-					System.out.println("Configuration file backup failed");
+					System.out.println("backupConfigFile: Configuration file backup failed");
 					return returnVal;
 				}	
 			
 			} else {
-				System.out.println("Configuration file does not exist");
+				System.out.println("backupConfigFile: Backup Configuration file does not exist");
 			
 				// if file doesn't exist create it
 				createConfigFile(file);
 			}
 		} catch (IOException e) {
+			System.out.println("backupConfigFile: Backup Configuration file error");
 			e.printStackTrace();
 		}
 		return returnVal;

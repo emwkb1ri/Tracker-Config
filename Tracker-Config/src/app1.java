@@ -22,8 +22,8 @@ public class app1 {
 		System.out.println("Radio1: " + config.radio1ModelNumber + "," + config.radio1ModelName + "," + config.radio1PortName + "," + config.radio1Baudrate);
 		System.out.println("Radio2: " + config.radio2ModelNumber + "," + config.radio2ModelName + "," + config.radio2PortName + "," + config.radio2Baudrate);
 		System.out.print("AMP: " + config.speAmpModelName + "," + config.speAmpPortName + "," + config.speAmpBaudrate);
-		System.out.print("," + config.speAmpCATPortName1 + "," + config.speAmpCATBaudrate1);
-		System.out.println("," + config.speAmpCATPortName2 + "," + config.speAmpCATBaudrate2);
+		System.out.print("," + config.speAmpCATPort1 + "," + config.speAmpCATBaudrate1);
+		System.out.println("," + config.speAmpCATPort2 + "," + config.speAmpCATBaudrate2);
 		
 		System.out.println("HostList: " + config.broadcastList);
 		
@@ -42,7 +42,7 @@ public class app1 {
 		
 		Radio radio2 = new Radio(config.radio2ModelNumber, config.radio2ModelName, config.radio2PortName, config.radio2Baudrate);
 		
-		Amp amp1 = new Amp(config.speAmpModelName, config.speAmpPortName, config.speAmpBaudrate, config.speAmpCATPortName1, config.speAmpCATBaudrate1, config.speAmpCATPortName2, config.speAmpCATBaudrate2);
+		Amp amp1 = new Amp(config.speAmpModelName, config.speAmpPortName, config.speAmpBaudrate, config.speAmpCATPort1, config.speAmpCATBaudrate1, config.speAmpCATPort2, config.speAmpCATBaudrate2);
 		
 		// simple test of the class/objects and their info method 
 		radio1.printInfo();
